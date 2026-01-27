@@ -1,0 +1,74 @@
+import numpy as np
+from scipy.stats import norm
+X = np.array([1, 2, 3, 8, 9, 10])
+n = len(X)
+k = 2 
+means = np.random.choice(X, k)
+variances = np.random.random(k)
+weights = np.ones(k) / k
+for iteration in range(10):
+    responsibilities = np.zeros((n, k))
+    for i in range(k):
+        responsibilities[:, i] = weights[i] * norm.pdf(X, means[i], np.sqrt(variances[i]))
+    responsibilities /= responsibilities.sum(axis=1, keepdims=True)
+    Nk = responsibilities.sum(axis=0)
+    for i in range(k):
+        means[i] = np.sum(responsibilities[:, i] * X) / Nk[i]
+        variances[i] = np.sum(responsibilities[:, i] * (X - means[i])**2) / Nk[i]
+        weights[i] = Nk[i] / n
+
+    print(f"Iteration {iteration+1}")
+    print("Means:", means)
+    print("Variances:", variances)
+    print("Weights:", weights)
+    print("-" * 40)
+output
+Iteration 1
+Means: [2 9]
+Variances: [0.66666667 0.66666667]
+Weights: [0.5 0.5]
+----------------------------------------
+Iteration 2
+Means: [2 8]
+Variances: [0.66666667 1.66666667]
+Weights: [0.5 0.5]
+----------------------------------------
+Iteration 3
+Means: [1 8]
+Variances: [1.66609416 1.67257697]
+Weights: [0.49987443 0.50012557]
+----------------------------------------
+Iteration 4
+Means: [1 8]
+Variances: [1.66521662 1.68161454]
+Weights: [0.49968188 0.50031812]
+----------------------------------------
+Iteration 5
+Means: [1 8]
+Variances: [1.66515944 1.6822076 ]
+Weights: [0.49966929 0.50033071]
+----------------------------------------
+Iteration 6
+Means: [1 8]
+Variances: [1.66515563 1.6822471 ]
+Weights: [0.49966845 0.50033155]
+----------------------------------------
+Iteration 7
+Means: [1 8]
+Variances: [1.66515538 1.68224973]
+Weights: [0.49966839 0.50033161]
+----------------------------------------
+Iteration 8
+Means: [1 8]
+Variances: [1.66515536 1.68224991]
+Weights: [0.49966839 0.50033161]
+----------------------------------------
+Iteration 9
+Means: [1 8]
+Variances: [1.66515536 1.68224992]
+Weights: [0.49966839 0.50033161]
+----------------------------------------
+Iteration 10
+Means: [1 8]
+Variances: [1.66515536 1.68224992]
+Weights: [0.49966839 0.50033161]

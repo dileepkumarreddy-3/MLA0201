@@ -1,0 +1,57 @@
+# K-Nearest Neighbours (K-NN) Implementation in Python
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+iris = load_iris()
+X = iris.data      
+y = iris.target  
+# Step 3: Split dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+k = 5
+knn = KNeighborsClassifier(n_neighbors=k)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+k_values = range(1, 11)
+accuracies = []
+for k in k_values:
+    model = KNeighborsClassifier(n_neighbors=k)
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)
+    accuracies.append(accuracy_score(y_test, pred))
+plt.plot(k_values, accuracies, marker='o')
+plt.xlabel("K value")
+plt.ylabel("Accuracy")
+plt.title("K-NN Accuracy for Different K Values")
+plt.grid(True)
+plt.show()
+
+#OUTPUT
+ Accuracy: 1.0
+
+Confusion Matrix:
+[[10  0  0]
+ [ 0  9  0]
+ [ 0  0 11]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        10
+           1       1.00      1.00      1.00         9
+           2       1.00      1.00      1.00        11
+
+    accuracy                           1.00        30
+   macro avg       1.00      1.00      1.00        30
+weighted avg       1.00      1.00      1.00        30
+ Accuracy: 1.0
